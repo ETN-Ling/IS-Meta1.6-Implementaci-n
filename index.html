@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PeerReview PWA - MVP</title>
+    
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2563eb">
+
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        header {
+            background-color: #2563eb;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .view-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group label {
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        .form-group input {
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #2563eb;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover { background-color: #1d4ed8; }
+        
+        /* Ocultar elementos nativamente */
+        [hidden] { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>PeerReview MVP</h1>
+        <div>
+            <label for="role-selector">Simular Rol: </label>
+            <select id="role-selector">
+                <option value="author">Autor</option>
+                <option value="editor">Editor (Prof. Carlos)</option>
+                <option value="reviewer">Revisor</option>
+            </select>
+        </div>
+    </header>
+
+    <main id="app-container">
+        
+        <section id="view-article-form" class="view-section">
+            <h2>Cargar Nuevo Artículo</h2>
+            <form id="article-form">
+                <div class="form-group">
+                    <label for="article-title">Título del Artículo</label>
+                    <input type="text" id="article-title" required placeholder="Ej. Implementación de PWAs en la academia...">
+                </div>
+                <div class="form-group">
+                    <label for="article-authors">Autores</label>
+                    <input type="text" id="article-authors" required placeholder="Ej. Juan Pérez, María Gómez">
+                </div>
+                <div class="form-group">
+                    <label for="article-pdf">Archivo PDF</label>
+                    <input type="file" id="article-pdf" accept="application/pdf" required>
+                </div>
+                <button type="submit">Subir Artículo</button>
+            </form>
+            <div id="form-message" style="margin-top: 1rem; color: green;" hidden></div>
+        </section>
+
+        <section id="view-dashboard" class="view-section" hidden>
+            <h2>Panel de Artículos (Dashboard)</h2>
+            <p>Aquí irá la tabla dinámica en el Segundo Incremento.</p>
+        </section>
+
+        <section id="view-review-form" class="view-section" hidden>
+            <h2>Evaluación de Artículo</h2>
+            <p>Aquí irá el formulario de revisión en el Tercer Incremento.</p>
+        </section>
+
+        <section id="view-review-viewer" class="view-section" hidden>
+            <h2>Comentarios de la Revisión</h2>
+            <p>Aquí irán los resultados para el autor en el Cuarto Incremento.</p>
+        </section>
+
+    </main>
+
+    <script type="module" src="./js/AppController.js"></script>
+
+</body>
+</html>
