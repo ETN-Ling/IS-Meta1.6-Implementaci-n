@@ -4,8 +4,10 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-app.use(cors());
+app.use(cors({ origin: '*' }));
 app.use(express.json()); // Para entender datos JSON
+app.use(express.json({ limit: '25mb' })); 
+app.use(express.urlencoded({ limit: '25mb', extended: true }));
 
 // Configuración de la conexión a MariaDB
 const pool = mariadb.createPool({
@@ -35,7 +37,37 @@ app.post('/api/articles', async (req, res) => {
     }
 });
 
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT}`);
+// Tu ruta GET que el Editor intenta leer
+app.get('/api/articles', async (req, res) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const rows = await conn.query("SELECT id, title, authors, status FROM articles");
+        res.json(rows);
+    } catch (err) {
+        res.status(500).send(err);
+    } finally {
+        if (conn) conn.release();
+    }
+});
+
+app.put('/api/articles/:id/status', async (req, res) => {
+    let conn;
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+        conn = await pool.getConnection();
+        
+        await conn.query("UPDATE articles SET status = ? WHERE id = ?", [status, id]);
+        res.json({ message: "Estado actualizado correctamente" });
+    } catch (err) {
+        console.error("Error al actualizar:", err);
+        res.status(500).json({ error: "Error al actualizar la BD" });
+    } finally {
+        if (conn) conn.release();
+    }
+});
+
+app.listen(3000, () => {
+    console.log("Servidor corriendo en puerto 3000 y CORS habilitado");
 });
