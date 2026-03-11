@@ -70,9 +70,9 @@
         <div>
             <label for="role-selector">Simular Rol: </label>
             <select id="role-selector">
-                <option value="author">Autor</option>
-                <option value="editor">Editor (Prof. Carlos)</option>
-                <option value="reviewer">Revisor</option>
+                <option value="Author">Autor</option>
+                <option value="Editor">Editor (Prof. Carlos)</option>
+                <option value="Reviewer">Revisor</option>
             </select>
         </div>
     </header>
@@ -99,9 +99,32 @@
             <div id="form-message" style="margin-top: 1rem; color: green;" hidden></div>
         </section>
 
-        <section id="view-dashboard" class="view-section" hidden>
-            <h2>Panel de Artículos (Dashboard)</h2>
-            <p>Aquí irá la tabla dinámica en el Segundo Incremento.</p>
+       <section id="view-dashboard" class="view-section" hidden>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>Panel de Artículos (Editor)</h2>
+                <button id="btn-refresh-dashboard" style="padding: 5px 15px;">🔄 Actualizar Lista</button>
+            </div>
+    
+            <div class="table-container" style="margin-top: 1.5rem; overflow-x: auto;">
+                <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <thead style="background-color: #f4f4f4;">
+                        <tr>
+                            <th style="padding: 10px;">ID (Corto)</th>
+                            <th style="padding: 10px;">Título</th>
+                            <th style="padding: 10px;">Autores</th>
+                            <th style="padding: 10px;">Estado</th>
+                            <th style="padding: 10px;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="articles-table-body">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 20px;">
+                            Cargando datos del servidor...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </section>
 
         <section id="view-review-form" class="view-section" hidden>
