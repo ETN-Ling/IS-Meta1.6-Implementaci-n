@@ -2,36 +2,40 @@
 import { ArticleStorage } from '../storage/ArticleStorage.js';
 
 export const ArticleManager = {
-    /**
-     * Crea un nuevo artículo, le asigna metadatos automáticos y lo guarda.
-     * @param {string} title - Título del artículo
-     * @param {string} authors - Nombres de los autores
-     * @param {File} file - Objeto File/Blob del PDF
-     * @returns {Promise<Object>} El objeto artículo creado
-     */
-    async createArticle(title, authors, file) {
+     async createArticle(title, authors, file) {
         try {
-            // 1. Construir el objeto Artículo (Aplicando reglas de negocio)
+            // 1. Validar que el archivo exista
+            if (!file) {
+                throw new Error("Debes seleccionar un archivo PDF.");
+            }
+            // 2. Validar que sea estrictamente un PDF
+            if (file.type !== 'application/pdf') {
+                throw new Error("Formato no permitido. Solo se aceptan archivos PDF.");
+            }
+            // 3. Validar tamaño máximo (Ejemplo: 5MB)
+            const MAX_SIZE_MB = 20;
+            const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
+            if (file.size > MAX_SIZE_BYTES) {
+                throw new Error(`El archivo es demasiado grande. El límite es de ${MAX_SIZE_MB}MB.`);
+            }// Construir el objeto Artículo
             const newArticle = {
-                // crypto.randomUUID() es una API nativa del navegador para generar IDs únicos
-                id: crypto.randomUUID(), 
+                id: Date.now().toString(36) + '-' + Math.random().toString(36).substring(2, 9), 
                 title: title.trim(),
                 authors: authors.trim(),
-                status: 'recibido', // Todo artículo nuevo entra con este estado por defecto
-                file: file,         // Guardamos el PDF directamente
+                status: 'recibido',
+                file: file, // El PDF se guarda como Blob en IndexedDB
+                synced: false, // Importante para que el SyncManager sepa que debe subirlo
                 createdAt: new Date().toISOString()
             };
 
-            // 2. Delegar la persistencia a la capa de Storage
+            // Delegar la persistencia a la capa de Storage
             await ArticleStorage.save(newArticle);
 
-            // 3. Retornar el artículo por si el Controller necesita mostrar información (ej. el ID)
             return newArticle;
             
         } catch (error) {
-            console.error("Error en ArticleManager al crear artículo:", error);
-            // Lanzamos el error para que el Controller lo maneje y muestre en la UI
-            throw new Error("No se pudo guardar el artículo localmente."); 
+            console.error("Error en ArticleManager:", error.message);
+            throw error; 
         }
     }
 };
